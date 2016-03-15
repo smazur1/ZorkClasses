@@ -1,5 +1,4 @@
 
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -13,59 +12,15 @@ public class House {
 	static boolean[] moneyFound = new boolean[8];
 	static String itemsSeen = "";
 
-
-
-	public static void exitTheHouse() {
-		String place = "You have left the house";
-		String[] things = new String[1];
-		int counter = 0;
-
-
-
-		for (boolean count : rooms) {
-			if (count == true)
-				counter++;	
-		}
-
-		int chance;
-		chance = rnd.nextInt(4);
-		if (chance == 3) {
-			things[0] = "You are being followed.  Good Luck";
-		} else {
-			things[0] = "You are safe now.";
-		}
-
-		String direct = "Goodbye";
-
-		System.out.println(place);
-		for (String thing : things) {
-			System.out.println(thing);
-		}
-		System.out.println("You visited " + counter + " rooms.");
-		System.out.printf("You have $%.2f.%n" , totalMoney );
-		System.out.println("You have seen: \n" + itemsSeen);
-		System.out.println(direct);
-
-	
-
-		System.exit(0);
-
-	}	
-
-
-
 	public static void main(String[] args) {
 
-
 		ArrayList<String> items;
-
 
 		String message = "";
 		int chance;
 		double money = 0;
 
 		Room current;
-
 
 		Room foyer = new Room();
 		foyer.setName("foyer");
@@ -74,15 +29,12 @@ public class House {
 		message = "You can go to the north (n) or the south (s)";
 		foyer.setMessage(message);
 
-
-
 		Room front = new Room();
 		front.setName("front room");
 		front.addItem("a phone");
 		front.setMoney();
 		message = "You can go to the east (e), the south (s) or the west (w)";
 		front.setMessage(message);
-
 
 		Room library = new Room();
 		library.setName("library");
@@ -91,14 +43,12 @@ public class House {
 		message = "You can go to the north (n) or the east (e)";
 		library.setMessage(message);
 
-
 		Room kitchen = new Room();
 		kitchen.setName("kitchen");
 		kitchen.addItem("bats");
 		kitchen.setMoney();
 		message = "You can go to the north (n) or the west (w)";
 		kitchen.setMessage(message);
-
 
 		Room dining = new Room();
 		dining.setName("dining room");
@@ -107,7 +57,6 @@ public class House {
 		dining.setMoney();
 		message = "You can go to the south (s)";
 		dining.setMessage(message);
-
 
 		Room vault = new Room();
 		vault.setName("vault");
@@ -130,13 +79,13 @@ public class House {
 		message = "You can go to the west (w)";
 		secret.setMessage(message);
 
-		foyer.setVisited(true);
 		rooms[0] = true;
 		current = foyer;
 
+		Report report = new Report();
+		report.addReportItems(current);
 
 		do {
-
 
 			System.out.println("You are in the " + current.getName());
 			items = current.getItems();
@@ -145,11 +94,11 @@ public class House {
 			}
 			System.out.println(current.getMessage());
 			money = current.getMoney();
-			System.out.printf("You found $%.2f.%n" , money);
+			System.out.printf("You found $%.2f.%n", money);
 			totalMoney = totalMoney + money;
-			System.out.printf("You have $%.2f.%n" , totalMoney );
+			report.addMoney(money);
 
-
+			System.out.printf("You have $%.2f.%n", totalMoney);
 
 			String choice = darkly.next();
 			choice = choice.toLowerCase();
@@ -157,14 +106,22 @@ public class House {
 			if (current.getName().equals("foyer")) {
 
 				switch (choice) {
-				case "n" :
+				case "n":
 					rooms[1] = true;
+
 					current = front;
+					report.addReportItems(current);
 					break;
-				case "s" :
-					exitTheHouse();
+				case "s":
+
+					report.printReport();
+
+					// exitTheHouse();
+
+					System.exit(0);
+
 					break;
-				default :
+				default:
 					break;
 
 				}
@@ -172,18 +129,24 @@ public class House {
 			} else if (current.getName().equals("front room")) {
 
 				switch (choice) {
-				case "e" :
+				case "e":
 					rooms[3] = true;
+
 					current = kitchen;
+					report.addReportItems(current);
 					break;
-				case "s" :
+				case "s":
+
 					current = foyer;
+					report.addReportItems(current);
 					break;
-				case "w" :
+				case "w":
 					rooms[2] = true;
+
 					current = library;
+					report.addReportItems(current);
 					break;
-				default :
+				default:
 					break;
 
 				}
@@ -191,72 +154,84 @@ public class House {
 			} else if (current.getName().equals("library")) {
 
 				switch (choice) {
-				case "n" :
+				case "n":
 					rooms[4] = true;
+
 					current = dining;
+					report.addReportItems(current);
 					break;
-				case "e" :
-					front.setVisited(true);
+				case "e":
+
 					current = front;
+					report.addReportItems(current);
 					break;
 
-				default :
+				default:
 					break;
 				}
 			} else if (current.getName().equals("kitchen")) {
 
 				switch (choice) {
-				case "n" :
+				case "n":
 					rooms[6] = true;
+
 					current = parlor;
+					report.addReportItems(current);
 					break;
-				case "w" :
-					front.setVisited(true);
+				case "w":
+
 					current = front;
+					report.addReportItems(current);
 					break;
 
-				default :
+				default:
 					break;
 				}
 			} else if (current.getName().equals("dining room")) {
 
 				switch (choice) {
-				case "s" :
-					library.setVisited(true);
+				case "s":
+
 					current = library;
+					report.addReportItems(current);
 					break;
 
-				default :
+				default:
 					break;
 				}
-
 
 			} else if (current.getName().equals("vault")) {
 
 				if (vault.isSecretFound() == true) {
 					switch (choice) {
 
-					case "e" :
+					case "e":
 						rooms[6] = true;
+
 						current = parlor;
+						report.addReportItems(current);
 						break;
-					case "s" :
+					case "s":
 						rooms[7] = true;
+
 						current = secret;
+						report.addReportItems(current);
 						break;
 
-					default :
+					default:
 						break;
 					}
 				} else {
 					switch (choice) {
 
-					case "e" :
+					case "e":
 						rooms[6] = true;
+
 						current = parlor;
+						report.addReportItems(current);
 						break;
 
-					default :
+					default:
 						break;
 					}
 				}
@@ -264,7 +239,7 @@ public class House {
 			} else if (current.getName().equals("parlor")) {
 
 				switch (choice) {
-				case "w" :
+				case "w":
 					rooms[5] = true;
 
 					if (vault.isSecretFound() == true) {
@@ -279,29 +254,34 @@ public class House {
 						} else {
 							message = "You can go to the east (e)";
 						}
-					}			
+					}
 
 					vault.setMessage(message);
+
 					current = vault;
+					report.addReportItems(current);
 					break;
-				case "s" :
-					kitchen.setVisited(true);
+				case "s":
+
 					current = kitchen;
+					report.addReportItems(current);
 					break;
 
-				default :
+				default:
 					break;
 
 				}
 			} else if (current.getName().equals("secret room")) {
 
 				switch (choice) {
-				case "w" :
+				case "w":
 					rooms[5] = true;
+
 					current = vault;
+					report.addReportItems(current);
 					break;
 
-				default :
+				default:
 					break;
 
 				}
@@ -311,4 +291,3 @@ public class House {
 	}
 
 }
-

@@ -3,16 +3,11 @@ import java.util.Random;
 
 public class Room extends GeneralRoom {
 
-	//	private String item;
 	private double money;
 	private String message;
 	private boolean moneyFound = false;
 	private Random rnd = new Random();
 	private boolean secretFound = false;
-
-
-
-
 
 	public boolean isSecretFound() {
 		return secretFound;
@@ -31,22 +26,15 @@ public class Room extends GeneralRoom {
 		things.add(_item);
 	}
 
-
 	public void setMoney() {
 
-		money = (rnd.nextDouble() * 1000.0 );
+		money = (rnd.nextDouble() * 1000.0);
 
 	}
-
-
-
-
 
 	public ArrayList<String> getItems() {
 		return things;
 	}
-
-
 
 	public double getMoney() {
 		double currentMoney;
@@ -60,8 +48,6 @@ public class Room extends GeneralRoom {
 		return currentMoney;
 	}
 
-
-
 	public String getMessage() {
 		return message;
 	}
@@ -70,7 +56,4 @@ public class Room extends GeneralRoom {
 		this.message = message;
 	}
 
-
 }
-
-
